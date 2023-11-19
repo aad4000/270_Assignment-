@@ -37,10 +37,8 @@ The increase in execution time with more threads indicates that the overhead of 
 In conclusion, while the mutex is effective in ensuring the correct outcome by preventing a race condition, it introduces contention overhead, which can reduce the benefits of parallel execution, especially with a higher number of threads contending for a single lock
 
 private.c:
-
-When using a private variable for the critical section, the number of threads or the size of the input doesn't significantly impact performance. This approach eliminates race conditions by allowing each thread to update its own local variable, avoiding the need for synchronization mechanisms like locks or mutexes. Rarely, a race condition may occur if two or more threads increment the global variable simultaneously. However, this is much less likely compared to traditional approaches where threads contend for access to a global variable, resulting in better performance.
-
+When using a private variable for the critical section, each thread has its own local variable, eliminating the need for mutex locks. This approach minimizes the occurrence of race conditions since each thread works independently on its private variable. However, it's important to note that very rarely, two or more threads may increment the global variable (count) using their local variables simultaneously, potentially causing a race condition. Despite this rare possibility, the approach is generally faster than locking the critical section with a mutex because there is no waiting between threads for accessing the global variable each time a 1 is found in the array.
 _nb_of_threads:   2             |4               |8
 executing_time: 0.006000 seconds|0.015000 seconds|0.024000 seconds
-
-These execution times demonstrate that the program scales well even with an increasing number of threads, indicating that the use of private variables is an effective approach for avoiding race conditions and improving performance.
+ 
+ As the table shows, as the number of threads increases, the execution time also increases. This is expected because with more threads, there is more overhead in terms of thread creation, synchronization, and context switching. However, even with the increase in execution time, the use of private variables without locks still provides a significant performance advantage over using a mutex, especially when dealing with a small critical section.
