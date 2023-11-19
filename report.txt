@@ -43,3 +43,21 @@ However, it's worth noting that in very rare situations, two or more threads mig
 The beauty of this approach is that it tends to be faster than using mutex locks. Why? Because there's no waiting time between threads for access to the global variable every time a "1" is found in the array. Each thread operates on its own private variable, reducing contention and improving overall performance.
 executing_time: 0.006000 seconds|0.015000 seconds|0.024000 seconds
  As you can see, as we increase the number of threads, the execution time also increases. This is expected because more threads mean more overhead due to thread creation, synchronization, and context switching. However, even with the increase in execution time, using private variables without locks still offers a significant performance advantage over using a mutex, especially when dealing with a small critical section.
+
+ count cache:
+               _________ threads____________
+size__________ 1                  2               4                   32   
+1,000        |0.001000 seconds|0.012000 seconds |0.002000 seconds  |0.014000 seconds
+1,000,000    |0.005000 seconds|0.009000 seconds | 0.004000 seconds |0.021000 seconds
+1,000,000,000|3.324000 seconds|1.712000 seconds |0.954000 seconds  | 0.668000 seconds
+
+
+The table shows the execution times for counting ones in arrays of different sizes using 1, 2, 4, and 32 threads. Key observations include:
+
+Small Array (1,000 Elements): Multithreading (2, 4, 32 threads) results in longer execution times compared to a single thread due to the overhead of managing multiple threads, which is disproportionate to the benefits for such a small task.
+
+Medium Array (1,000,000 Elements): A moderate improvement in execution times is observed when using 2 and 4 threads compared to a single thread, indicating the beginning of benefits from parallel processing. However, with 32 threads, the time increases, suggesting an inefficiency likely due to the overhead of managing many threads.
+
+Large Array (1,000,000,000 Elements): Significant performance gains are seen when increasing threads from 1 to 4, showcasing effective parallelization for larger tasks. However, the improvement from 4 to 32 threads is less pronounced, pointing towards diminishing returns due to overhead and potential hardware limitations.
+
+In summary, while multithreading improves performance for larger tasks, the benefits are limited by overhead and the nature of the workload, with diminishing returns as the number of threads increases beyond a certain point.
