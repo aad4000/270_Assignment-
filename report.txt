@@ -1,0 +1,15 @@
+              _________ threads____________
+size__________ 1        2       4       32   
+1,000        |0.0000 seconds | 0.007000 seconds |0.002000 seconds  |0.009000 seconds
+1,000,000    | 0.012000 seconds| 0.011000 seconds |0.015000 seconds |0.009000 seconds
+1,000,000,000| 3.170000 seconds|2.806000 seconds|2.363000 seconds  |1.403000 seconds
+
+I ran a program to see how fast it counts ones in arrays, changing the array sizes and the number of threads. Here’s what I found:
+
+Small Array (1,000 elements): Surprisingly, using just one thread (doing it the old-school, sequential way) was the quickest. Adding more threads actually made it slower, probably because the computer was spending too much time managing these threads instead of just counting.
+
+Medium Array (1,000,000 elements): Here, things got interesting. Using 32 threads was the best – it was faster than just one or a few threads. Seems like more threads help when there's more data to go through.
+
+Huge Array (1,000,000,000 elements): With this massive array, more threads meant faster counting. The time it took went down significantly from one thread to 32 threads. This shows that for really big tasks, having more threads working together can speed things up a lot.
+
+So, what I learned is that more threads don't always mean faster results – it really depends on how big the job is. For small tasks, keep it simple. But for big data, more threads can really help.
